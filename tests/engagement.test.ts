@@ -1,36 +1,65 @@
-import { applyCommitmentDevice, getMicroReward } from '../src/engagement/commitment-devices';
-import { trackUserProgress } from '../src/engagement/micro-rewards';
+import { createCommitmentDevice, checkCommitmentDeviceStatus, updateCommitmentDevice } from '../src/engagement/commitment-devices';
+import { MicroRewardImpl } from '../src/engagement/micro-rewards';
 
 describe('Engagement Features', () => {
     describe('Commitment Devices', () => {
-        it('should apply a commitment device successfully', () => {
+        it('should create a commitment device successfully', () => {
             const userId = 'user123';
-            const commitment = 'Complete 5 CBT sessions this week';
-            const result = applyCommitmentDevice(userId, commitment);
-            expect(result).toBe(true);
+            const goal = 'Complete 5 CBT sessions this week';
+            const deadline = new Date('2025-12-31');
+            
+            const device = createCommitmentDevice(userId, goal, deadline);
+            
+            expect(device).toEqual({
+                userId,
+                goal,
+                deadline,
+                createdAt: expect.any(Date),
+                status: 'active'
+            });
         });
 
-        it('should not apply a commitment device if user is invalid', () => {
-            const userId = 'invalidUser';
-            const commitment = 'Complete 5 CBT sessions this week';
-            const result = applyCommitmentDevice(userId, commitment);
-            expect(result).toBe(false);
+        it('should check commitment device status', () => {
+            const deviceId = 'device123';
+            const status = checkCommitmentDeviceStatus(deviceId);
+            
+            expect(status).toEqual({
+                deviceId,
+                status: expect.any(String),
+                updatedAt: expect.any(Date)
+            });
+        });
+
+        it('should update commitment device', () => {
+            const deviceId = 'device123';
+            const updates = { goal: 'Updated goal', status: 'completed' };
+            
+            const updated = updateCommitmentDevice(deviceId, updates);
+            
+            expect(updated).toEqual({
+                deviceId,
+                ...updates,
+                updatedAt: expect.any(Date)
+            });
         });
     });
 
     describe('Micro Rewards', () => {
-        it('should track user progress and provide a micro reward', () => {
-            const userId = 'user123';
-            const progress = 3; // Assume user completed 3 tasks
-            const reward = getMicroReward(userId, progress);
-            expect(reward).toEqual({ points: 30, message: 'Great job! You earned 30 points!' });
+        let microReward: MicroRewardImpl;
+
+        beforeEach(() => {
+            microReward = new MicroRewardImpl();
         });
 
-        it('should not provide a reward if progress is insufficient', () => {
-            const userId = 'user123';
-            const progress = 1; // Assume user completed 1 task
-            const reward = getMicroReward(userId, progress);
-            expect(reward).toEqual({ points: 0, message: 'Keep going! You need to complete more tasks for a reward.' });
+        it('should initialize with default values', () => {
+            expect(microReward.id).toBe('reward-1');
+            expect(microReward.points).toBe(0);
+            expect(microReward.isClaimed).toBe(false);
+        });
+
+        it('should track interaction and increment points', () => {
+            microReward.trackInteraction('completed task');
+            expect(microReward.points).toBe(10);
         });
     });
 });
