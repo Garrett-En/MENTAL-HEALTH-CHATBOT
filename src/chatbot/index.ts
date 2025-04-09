@@ -3,6 +3,7 @@ import { CommitmentDevices } from '../engagement/commitment-devices';
 import { MicroReward, MicroRewardImpl } from '../engagement/micro-rewards';
 import { DepressionModule } from './cbt-modules/depression';
 import { StressModule } from './cbt-modules/stress';
+import * as AnxietyModule from './cbt-modules/anxiety';
 
 export class MentalHealthChatbot {
     private llmIntegration: LLMIntegration;
@@ -24,7 +25,7 @@ export class MentalHealthChatbot {
     public async getCBTModule(moduleType: string): Promise<any> {
         switch (moduleType) {
             case 'anxiety':
-                throw new Error('Anxiety module is not implemented');
+                return AnxietyModule;
             case 'depression':
                 return DepressionModule;
             case 'stress':

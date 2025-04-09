@@ -2,8 +2,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const LLMConfig = {
-    apiUrl: process.env.LLM_API_URL || "https://generativelanguage.googleapis.com/v1beta2/models/text-bison-001:generateText",
-    apiKey: process.env.LLM_API_KEY || 'AIzaSyDmFynYuPyydsLnndrk3cxPwyPgecEl7e', // Replace with your actual API key
+    apiUrl: process.env.LLM_API_URL || "https://api.openai.com/v1/chat/completions",
+    apiKey: process.env.LLM_API_KEY || '', // Should be set in .env file
     model: 'gpt-3.5-turbo',
     timeout: 5000,
     maxTokens: 150,

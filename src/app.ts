@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { Chatbot } from './chatbot/index';
+import { MentalHealthChatbot } from './chatbot/index';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -8,12 +8,16 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const chatbot = new Chatbot();
+// Initialize the mental health chatbot
+const chatbot = new MentalHealthChatbot();
+
+// Serve static files from the public directory
+app.use(express.static('public'));
 
 app.post('/chat', async (req, res) => {
     const userMessage = req.body.message;
     try {
-        const botResponse = await chatbot.handleUserMessage(userMessage);
+        const botResponse = await chatbot.handleUserInput(userMessage);
         res.json({ response: botResponse });
     } catch (error) {
         res.status(500).json({ error: 'An error occurred while processing your request.' });

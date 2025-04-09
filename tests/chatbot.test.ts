@@ -1,4 +1,17 @@
 import { MentalHealthChatbot } from '../src/chatbot/index';
+import { LLMIntegration } from '../src/chatbot/llm-integration';
+
+// Mock the LLM response for testing
+jest.mock('../src/chatbot/llm-integration', () => {
+  return {
+    LLMIntegration: jest.fn().mockImplementation(() => {
+      return {
+        getResponse: jest.fn().mockResolvedValue("This is a mocked response for testing purposes."),
+        setMockResponse: jest.fn()
+      };
+    })
+  };
+});
 
 describe('MentalHealthChatbot', () => {
     let chatbot: MentalHealthChatbot;
@@ -14,7 +27,10 @@ describe('MentalHealthChatbot', () => {
     });
 
     test('should provide CBT techniques for anxiety', async () => {
-        await expect(chatbot.getCBTModule('anxiety')).rejects.toThrow('Anxiety module is not implemented');
+        const module = await chatbot.getCBTModule('anxiety');
+        expect(module).toBeDefined();
+        expect(module.suggestCopingStrategies).toBeDefined();
+        expect(Array.isArray(module.suggestCopingStrategies())).toBe(true);
     });
 
     test('should load depression module', async () => {
