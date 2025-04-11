@@ -29,3 +29,7 @@ public/index.html -->
 ## Notes: Diarmuid Enright
 
 This is just for demonstaration purposes and is not trained locally however there are plans to do so in the future. It is a GPT wrapper and acts as such for all intended purposes, do not take medical advice from this or any GPT model in any way. If you actually need help please consult a trained professional (not a trained professional model).
+
+## Future notes:
+
+Something for Garrett to add in the future.
